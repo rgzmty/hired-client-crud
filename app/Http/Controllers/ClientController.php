@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Client;
+use App\Occupation;
 use Illuminate\Http\Request;
 
 class ClientController extends Controller
@@ -20,7 +21,7 @@ class ClientController extends Controller
     public function index()
     {
         $clients = Client::paginate(10)->all();
-        return view('clientIndex', ['clients' => $clients]);
+        return view('clientIndex', compact('clients'));
     }
 
     /**
@@ -32,12 +33,13 @@ class ClientController extends Controller
     {
         $client = (object) [
             "id" => 0,
-            "name" => 0,
-            "email" => 0,
+            "name" => '',
+            "email" => '',
             "sex" => 0,
             "occupation_id" => 0
         ];
-        return view('clientEdit', ['client' => $client]);
+        $occupations = Occupation::all();
+        return view('clientEdit', compact('client', 'occupations'));
     }
 
     /**
@@ -54,7 +56,7 @@ class ClientController extends Controller
         $client->sex = $request->sex;
         $client->occupation_id = $request->occupation_id;
         $client->save();
-        return redirect('/clients')->with(['success_message' => 'Cambios guardados.']);
+        return redirect('/')->with(['success_message' => 'Cambios guardados.']);
     }
 
     /**
@@ -65,7 +67,8 @@ class ClientController extends Controller
      */
     public function edit(Client $client)
     {
-        return view("clientEdit", ['client' => $client]);
+        $occupations = Occupation::all();
+        return view("clientEdit", compact('client', 'occupations'));
     }
 
     /**
@@ -77,6 +80,6 @@ class ClientController extends Controller
     public function destroy(Client $client)
     {
         $client->delete();
-        return redirect('/clients')->with(['success_message' => 'Cliente destruido.']);
+        return redirect('/clients')->with(['success_message' => 'Cliente eliminado.']);
     }
 }
