@@ -12,11 +12,17 @@
                 <label for="name">Nombre:</label>
                 <input type="text" class="form-control" name="name" id="name"  value="{{ $client->name }}" placeholder="" aria-describedby="nameHelpBlock" required>
                 <small id="nameHelpBlock" class="form-text text-muted"></small>
+                @error('name')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                @enderror
             </div>
             <div class="form-group">
                 <label for="email">E-Mail:</label>
                 <input type="text" class="form-control" name="email" id="email"  value="{{ $client->email }}" placeholder="" aria-describedby="emailHelpBlock" required>
                 <small id="emailHelpBlock" class="form-text text-muted"></small>
+                @error('email')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                @enderror
             </div>
             <div class="form-group">
                 <label>Sexo:</label>
@@ -28,6 +34,9 @@
                     <input class="form-check-input" type="radio" name="sex" id="sex1" value="1" {{ $client->sex == 1 ? 'checked' : '' }}>
                     <label class="form-check-label" for="sex1">Mujer</label>
                 </div>
+                @error('sex')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                @enderror
             </div>
             <div class="form-group">
                 <label for="name">Ocupación:</label>
@@ -36,6 +45,9 @@
                     <option value="{{ $occupation->id }}" {{ $client->occupation_id == $occupation->id? 'selected' : ''}}>{{ $occupation->name }}</option>
                     @endforeach
                 </select>
+                @error('occupation_id')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                @enderror
             </div>
             <div class="form-group">
                 <button class="btn btn-primary" type="submit">Guardar</button>

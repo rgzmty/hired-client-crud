@@ -51,10 +51,18 @@ class ClientController extends Controller
     public function store(Request $request)
     {
         $client = $request->id ? Client::findOrFail($request->id) : new Client;
-        $client->name = $request->name;
-        $client->email = $request->email;
-        $client->sex = $request->sex;
-        $client->occupation_id = $request->occupation_id;
+
+        $validatedData = $request->validate([
+            'name' => 'required',
+            'email' => 'email',
+            'sex' => 'in:0,1',
+            'occupation_id' => 'exists:occupations,id',
+        ]);
+
+        $client->name = $validatedData['name'];
+        $client->email = $validatedData['email'];
+        $client->sex = $validatedData['sex'];
+        $client->occupation_id = $validatedData['occupation_id'];
         $client->save();
         return redirect('/')->with(['success_message' => 'Cambios guardados.']);
     }
@@ -81,5 +89,15 @@ class ClientController extends Controller
     {
         $client->delete();
         return redirect('/clients')->with(['success_message' => 'Cliente eliminado.']);
+    }
+
+    public function messages()
+    {
+        return [
+            'name.required'        => 'Debe de escribir un nombre.',
+            'email.email'          => 'Debe de escribir una dirección de email válida.',
+            'sex.in'               => 'Este valor no es válido.',
+            'occupation_id.exists' => 'La  ocupación seleccionada ha sido eliminada del sistema.',
+        ];
     }
 }
